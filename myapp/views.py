@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt 
 from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 
 @csrf_exempt
 def register(request):
@@ -52,3 +53,26 @@ def user_logout(request):
         return JsonResponse({'msg':'you are logged out '})
     else:
         JsonResponse({'msg':'method is not allowed , use post method'})
+
+
+@csrf_exempt
+@login_required
+def change_user_deatils(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = request.user
+
+        if username:
+            user.username = username.lower()
+            
+        if password:
+            user.password = make_password(password)
+            
+        user.save()
+
+        return JsonResponse({'msg': 'user details updated'})
+    else:
+        return JsonResponse({'msg': 'method is not allowed, use post method'})
+    
+
