@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.views.decorators.csrf import csrf_exempt 
+from django.contrib.auth import authenticate, login , logout
+from django.contrib.auth.decorators import login_required
 
 @csrf_exempt
 def register(request):
@@ -41,4 +42,13 @@ def user_login(request):
         else:
             return JsonResponse({"error": "Invalid password"}, status=401)
 
-    return JsonResponse({'error': "Method not allowed"}, status=405)
+    return JsonResponse({'error': "Method not allowed , use POST method"}, status=405)
+
+@csrf_exempt
+@login_required 
+def user_logout(request):
+    if request.method == "POST":
+        logout(request)
+        return JsonResponse({'msg':'you are logged out '})
+    else:
+        JsonResponse({'msg':'method is not allowed , use post method'})
