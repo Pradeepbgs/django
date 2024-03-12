@@ -42,7 +42,8 @@ INSTALLED_APPS = [
 EXTERNAL_APPS = [
     'myapp',
     'rest_framework',
-    'posts'
+    'posts',
+    'cloudinary',
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS
