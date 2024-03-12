@@ -20,8 +20,9 @@ class Comment(models.Model):
 
 class Like(models.Model):
     liked_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    post = models.ForeignKey(ImagePost, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    post = models.ForeignKey(ImagePost, on_delete=models.CASCADE, null=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
 

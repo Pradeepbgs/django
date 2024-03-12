@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .utils import cloudinary
+from django.shortcuts import get_object_or_404
 
 
 @csrf_exempt
@@ -101,7 +102,8 @@ def comment_post(request):
 
     return JsonResponse({'error': 'Invalid request method'})
 
-
+@csrf_exempt
+@login_required
 def toggle_like_post(request):
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
@@ -109,8 +111,44 @@ def toggle_like_post(request):
         if not post_id:
             return JsonResponse({'error': 'Please provide a post ID'})
 
-        Like.objects.filter(post=post_id, user=request.user)
+        post = get_object_or_404(ImagePost, id=post_id)
+        like, created = Like.objects.get_or_create(post=post, likedBy=request.user)
 
-        return JsonResponse({'success': True})
+        if not created:
+            like.delete()
+            liked = False
+        else:
+            liked = True
+
+        return JsonResponse({'success': True, 'liked': liked})
+
 
     return JsonResponse({'error': 'Invalid request method'})
+
+
+@csrf_exempt
+@login_required
+def toggle_like_comment(request):
+
+    if request.method == 'POST':
+        comment_id = request.POST.get('comment_id')
+
+        if not comment_id:
+            return JsonResponse({'error':'Please Provide a Comment_id'})
+        
+        comment = get_object_or_404(Comment, id=comment_id)
+
+        if not comment:
+            return JsonResponse({'error':'No Comments Found!'})
+        
+        like, created = Like.objects.get_or_create(comment=comment, likedBy=request.user)
+        if not created:
+            like.delete()
+            liked = False
+        else:
+            liked = True
+
+        return JsonResponse({'success':True,'liked':liked})
+    
+    return JsonResponse({'error':'Invalid Request Method'})
+        
