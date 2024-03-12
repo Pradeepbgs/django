@@ -47,7 +47,8 @@ def create_post(request):
 def get_all_post(request):
 
     if request.method == 'GET':
-        posts = ImagePost.objects.all()
+        user = request.user
+        posts = ImagePost.objects.filter(user=user.id)
         data = []
         for post in posts:
             data.append({
