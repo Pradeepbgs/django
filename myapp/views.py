@@ -64,7 +64,7 @@ def change_user_deatils(request):
         user = request.user
 
         if username:
-            user.username = username.lower()
+            User.objects.filter(username=user.username).update(username=username)
             
         if password:
             user.password = make_password(password)

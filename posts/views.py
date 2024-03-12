@@ -77,3 +77,40 @@ def delete_post(request):
         return JsonResponse({'success': True})
     
     return JsonResponse({'error': 'Invalid request method'})
+
+
+
+@csrf_exempt
+@login_required
+def comment_post(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        comment_text = request.POST.get('comment')
+
+        if not post_id or not comment_text:
+            return JsonResponse({'error': 'Please provide a post ID and comment'})
+
+        try:
+            post = ImagePost.objects.get(id=post_id)
+        except ImagePost.DoesNotExist:
+            return JsonResponse({'error': 'Post not found'})
+
+        Comment.objects.create(post=post, user=request.user, comment=comment_text)
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+def toggle_like_post(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+
+        if not post_id:
+            return JsonResponse({'error': 'Please provide a post ID'})
+
+        Like.objects.filter(post=post_id, user=request.user)
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'error': 'Invalid request method'})
