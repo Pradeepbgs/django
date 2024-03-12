@@ -5,10 +5,8 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Configure Cloudinary
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
@@ -17,6 +15,10 @@ cloudinary.config(
 )
 
 def upload_image(image):
-    """Upload image to Cloudinary and return the URL"""
     upload_result = cloudinary.uploader.upload(image)
     return upload_result.get('secure_url')
+
+
+def delete_post(image_url):
+    public_id = image_url.split("/").pop().split(".")[0]
+    return cloudinary.uploader.destroy(public_id)

@@ -7,8 +7,6 @@ from .models import *
 from .utils import cloudinary
 
 
-
-
 @csrf_exempt
 @login_required
 def create_post(request):
@@ -60,4 +58,21 @@ def get_all_post(request):
 
         return JsonResponse({'data': data})
 
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+@csrf_exempt
+@login_required
+def delete_post(request):
+    if request.method == 'DELETE':
+        post_id = request.GET.get('post_id')
+        print(post_id)
+        if not post_id:
+            return JsonResponse({'error': 'Please provide a post ID'})
+        
+        post = ImagePost.objects.get(id=post_id, user=request.user)
+        cloudinary.delete_post(post.image)
+        post.delete()
+        return JsonResponse({'success': True})
+    
     return JsonResponse({'error': 'Invalid request method'})
