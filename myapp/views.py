@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt 
 from django.contrib.auth import authenticate, login , logout
@@ -15,17 +16,23 @@ def register(request):
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        
+
         if User.objects.filter(username=username).exists():
-            return JsonResponse({"error": "User already exists with this username"}, status=400)
-        
+            messages.error(request, "User already exists with this username")
+            return render(request, 'register.html')
+
         user = User.objects.create_user(
             username=username.lower(), email=email, password=password)
-        
+
         if user is not None:
-            return JsonResponse({"message": "User created successfully"})
+            messages.success(request, "User created successfully")
+            return redirect('login')
         else:
-            return JsonResponse({"error": "Failed to create user"}, status=500)
+            messages.error(request, "Failed to create user")
+            return render(request, 'register.html')
+
+    return render(request, 'register.html')
+
 
 @csrf_exempt
 def user_login(request):
@@ -47,7 +54,7 @@ def user_login(request):
         else:
             return JsonResponse({"error": "Invalid password"}, status=401)
 
-    return JsonResponse({'error': "Method not allowed , use POST method"}, status=405)
+    return render(request, 'login.html')
 
 @csrf_exempt
 @login_required 
