@@ -22,3 +22,4 @@ urlpatterns = [
     path('', include('myapp.urls')),
     path('posts/', include('posts.urls')),
 ]
+ 

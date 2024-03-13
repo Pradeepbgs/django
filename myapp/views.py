@@ -1,9 +1,13 @@
 from django.contrib.auth.models import User
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt 
 from django.contrib.auth import authenticate, login , logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+
+def get_home_page(request):
+    return render(request, 'index.html')
 
 @csrf_exempt
 def register(request):
