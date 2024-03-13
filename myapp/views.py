@@ -41,7 +41,8 @@ def user_login(request):
         password = request.POST.get('password')
         
         if not User.objects.filter(username=username).exists():
-            return JsonResponse({"error": "User not found"}, status=404)
+            messages.error(request, "User not found")
+            return render(request, 'login.html')
 
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -50,9 +51,10 @@ def user_login(request):
                 'username': user.username,
                 'email': user.email,
             }
-            return JsonResponse({'message': "User logged in", 'userData': user_data})
+            return redirect('/posts/all-post/')
         else:
-            return JsonResponse({"error": "Invalid password"}, status=401)
+            messages.error(request, "Invalid password")
+            return render(request, 'login.html')
 
     return render(request, 'login.html')
 

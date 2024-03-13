@@ -6,23 +6,16 @@
 <body>
   <h1>Welcome to your dashboard!</h1>
   <h2>Your uploaded files:</h2>
-  <table border="1">
-    <tr>
-      <th>File Name</th>
-      <th>File Size</th>
-      <th>Download</th>
-    </tr>
+  <ul>
     {% for file in user_files %}
-    <tr>
-      <td>{{ file.name }}</td>
-      <td>{{ file.size }} bytes</td>
-      <td><a href="{{ file.url }}">Download</a></td>
-    </tr>
+    <li>
+      <strong>{{ file.name }}</strong>
+      <p>File size: {{ file.size }} bytes</p>
+      <a href="{{ file.url }}">Download</a>
+    </li>
     {% empty %}
-    <tr>
-      <td colspan="3">No files uploaded yet.</td>
-    </tr>
+    <li>No files uploaded yet.</li>
     {% endfor %}
-  </table>
+  </ul>
 </body>
 </html>
