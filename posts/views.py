@@ -1,5 +1,6 @@
 import tempfile
 import os
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt 
 from django.contrib.auth.decorators import login_required
@@ -46,7 +47,6 @@ def create_post(request):
 @csrf_exempt
 @login_required
 def get_all_post(request):
-
     if request.method == 'GET':
         user = request.user
         posts = ImagePost.objects.filter(user=user.id)
@@ -57,10 +57,8 @@ def get_all_post(request):
                 'image': post.image.url,
                 'caption': post.caption
             })
+        return render(request, 'dashboard.html', context={'data':data})
 
-        return JsonResponse({'data': data})
-
-    return JsonResponse({'error': 'Invalid request method'})
 
 
 @csrf_exempt
