@@ -12,12 +12,10 @@ from django.shortcuts import get_object_or_404
 @csrf_exempt
 @login_required
 def create_post(request):
-    
     if request.method == 'POST':
         image = request.FILES.get('image')
-        caption = request.POST.get('caption')
 
-        if not image or not caption:
+        if not image:
             return JsonResponse({'error': 'Please provide an image and caption'})
         
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -31,17 +29,17 @@ def create_post(request):
             os.remove(tmp_file_path)
         
         post = ImagePost.objects.create(
-            image=image_url, caption=caption, user=request.user)
+            file_url=image_url, user=request.user)
         
-        userPost = {
-            'id': post.id,
-            'image': post.image,
-            'caption': post.caption,
-        }
+        # userPost = {
+        #     'id': post.id,
+        #     'image': post.image,
+        #     'caption': post.caption,
+        # }
 
-        return JsonResponse({'success': True, 'data':{'post':userPost}})
+        return redirect('/posts/all-post/')
     
-    return JsonResponse({'error': 'Invalid request method', 'data':{}})
+    return render(request, 'create_post.html')
     
 
 @csrf_exempt
@@ -54,9 +52,9 @@ def get_all_post(request):
         for post in posts:
             data.append({
                 'id': post.id,
-                'image': post.image.url,
-                'caption': post.caption
+                'file': post.file_url,
             })
+            print(data)
         return render(request, 'dashboard.html', context={'data':data})
 
 

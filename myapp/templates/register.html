@@ -13,8 +13,15 @@
       <div class="col-lg-4 col-md-6 col-sm-8 col-xs-10">
         <div class="card mt-5">
           <div class="card-body">
-            <h5 class="card-title text-center">Login</h5>
-            <form>
+            {% if messages %}
+              <div class="alert alert-primary" role="alert">
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            <h5 class="card-title text-center">Register</h5>
+            <form action="/register/" method="post">
               <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" name="username">

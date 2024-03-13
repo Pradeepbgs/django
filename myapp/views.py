@@ -26,7 +26,7 @@ def register(request):
 
         if user is not None:
             messages.success(request, "User created successfully")
-            return redirect('login')
+            return render(request, 'register.html')
         else:
             messages.error(request, "Failed to create user")
             return render(request, 'register.html')
@@ -47,10 +47,10 @@ def user_login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            user_data = {
-                'username': user.username,
-                'email': user.email,
-            }
+            # user_data = {
+            #     'username': user.username,
+            #     'email': user.email,
+            # } we dont need to send data because we are coding server side rendering
             return redirect('/posts/all-post/')
         else:
             messages.error(request, "Invalid password")

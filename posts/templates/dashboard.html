@@ -7,15 +7,14 @@
   <h1>Welcome to your dashboard!</h1>
   <h2>Your uploaded files:</h2>
   <ul>
-    {% for file in user_files %}
+    {% for file in data %}
     <li>
-      <strong>{{ file.name }}</strong>
-      <p>File size: {{ file.size }} bytes</p>
-      <a href="{{ file.url }}">Download</a>
+      <strong>{{ file.id }} <a target="_blank" href={{file.file}}>{{ file.file }}</a></strong>
     </li>
     {% empty %}
     <li>No files uploaded yet.</li>
     {% endfor %}
   </ul>
+  <a href="/posts/create/">create post</a>
 </body>
 </html>
