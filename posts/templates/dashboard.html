@@ -11,8 +11,10 @@
     <h2 class="text-center mb-4">Your uploaded files:</h2>
     <ul class="list-group">
       {% for file in data %}
-      <li class="list-group-item">
+      <li class="list-group-item" >
         <strong><a target="_blank" href={{file.file}}>{{ file.id }} - {{ file.file }}</a></strong>
+        <button class="btn btn-danger delete-button" data-file-id={{file.id}}>Delete</button>
+
       </li>
       {% empty %}
       <li class="list-group-item">No files uploaded yet.</li>
